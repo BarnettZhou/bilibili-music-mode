@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<style>
+  body {
+    width: 240px;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', 'Microsoft YaHei', sans-serif;
+    background: #fff;
+  }
+  .wrap { padding: 14px 16px; }
+  .row { display: flex; align-items: center; justify-content: space-between; }
+  .label { font-size: 14px; font-weight: 600; color: #18191c; }
+  .hint { margin-top: 8px; font-size: 12px; color: #9499a0; }
+  .hint.error { color: #fb7299; }
+
+  .switch { position: relative; width: 40px; height: 22px; flex: none; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider {
+    position: absolute; inset: 0;
+    border-radius: 22px;
+    background: #e3e5e7;
+    transition: background 0.2s;
+    cursor: pointer;
+  }
+  .slider::before {
+    content: '';
+    position: absolute;
+    width: 18px; height: 18px;
+    left: 2px; top: 2px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    transition: transform 0.2s;
+  }
+  input:checked + .slider { background: #fb7299; }
+  input:checked + .slider::before { transform: translateX(18px); }
+  input:disabled + .slider { opacity: 0.5; cursor: not-allowed; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="row">
+      <span class="label">♪ 音乐模式</span>
+      <label class="switch"><input type="checkbox" id="sw"><span class="slider"></span></label>
+    </div>
+    <div class="hint" id="hint">在 bilibili 视频页打开 / 关闭</div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "Bilibili Music Mode",
+  "version": "0.1.0",
+  "description": "把 B 站视频页变成音乐播放器：全屏遮罩播放器、自动提取播放列表（合集 / 接下来播放）、仅音频省流。",
+  "action": {
+    "default_title": "Bilibili 音乐模式",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": ["activeTab"],
+  "content_scripts": [
+    {
+      "matches": ["*://www.bilibili.com/video/*"],
+      "js": ["injector.js"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": ["*://www.bilibili.com/video/*"],
+      "js": ["content.js"],
+      "css": ["overlay.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}
