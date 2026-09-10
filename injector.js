@@ -1,6 +1,7 @@
 /* Bilibili Music Mode - 页面主世界注入器（document_start）
  * 仅音频（省流）：剔除播放地址里的视频流，只保留音频流。
- * 开关经 localStorage('bmm:audioOnly') 传递，由 content.js 在打开/关闭遮罩时设置。
+ * 开关经 sessionStorage('bmm:audioOnly') 传递，由 content.js 在打开/关闭遮罩时设置。
+ * 用 sessionStorage 而非 localStorage：关掉标签页即失效，避免“插件未开启仍屏蔽视频”。
  * 补丁成功后在 <html data-bmm-patched="1"> 上做标记，供 content script 读取。
  */
 (() => {
@@ -8,7 +9,7 @@
   const LS_AUDIO = 'bmm:audioOnly';
   const enabled = () => {
     try {
-      return localStorage.getItem(LS_AUDIO) === '1';
+      return sessionStorage.getItem(LS_AUDIO) === '1';
     } catch (e) {
       return false;
     }

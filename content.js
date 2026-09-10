@@ -8,8 +8,8 @@
   if (window.top !== window || window.__bmmLoaded) return;
   window.__bmmLoaded = true;
 
-  const LS_AUDIO = 'bmm:audioOnly'; // injector.js 读取：'1' 打补丁 / '0' 不打
-  const LS_PREF = 'bmm:prefAudioOnly'; // 用户偏好，默认开
+  const LS_AUDIO = 'bmm:audioOnly'; // injector.js 读取（sessionStorage，随标签页关闭失效）：'1' 打补丁 / '0' 不打
+  const LS_PREF = 'bmm:prefAudioOnly'; // 用户偏好（localStorage），默认开
   const SS_REOPEN = 'bmm:reopen'; // 跨导航保持音乐模式
   const SS_TRIED = 'bmm:reopen:tried'; // 防止为打补丁反复重载
 
@@ -20,6 +20,9 @@
   let boundVideo = null;
   let urlWatcher = null;
   let lastBvid = null;
+
+  // 清掉旧版本残留在 localStorage 的生效标志（会造成未开启也屏蔽视频）
+  localStorage.removeItem(LS_AUDIO);
 
   const $ = (s, r = document) => r.querySelector(s);
   const getVideo = () => document.querySelector('video');
@@ -343,7 +346,7 @@
     $('.bmm-ao-box', overlay).addEventListener('change', (e) => {
       const on = e.target.checked;
       localStorage.setItem(LS_PREF, on ? '1' : '0');
-      localStorage.setItem(LS_AUDIO, on ? '1' : '0');
+      sessionStorage.setItem(LS_AUDIO, on ? '1' : '0');
       if (on !== isPatched()) {
         sessionStorage.setItem(SS_REOPEN, '1');
         location.reload();
@@ -381,7 +384,7 @@
   function open() {
     if (overlay) return;
     if (prefAudioOnly()) {
-      localStorage.setItem(LS_AUDIO, '1');
+      sessionStorage.setItem(LS_AUDIO, '1');
       if (!isPatched() && !sessionStorage.getItem(SS_TRIED)) {
         // 本页视频流还没被剔除，重载一次让 injector 在 document_start 打补丁
         sessionStorage.setItem(SS_REOPEN, '1');
@@ -410,7 +413,7 @@
     document.documentElement.classList.remove('bmm-open');
     sessionStorage.removeItem(SS_REOPEN);
     sessionStorage.removeItem(SS_TRIED);
-    localStorage.setItem(LS_AUDIO, '0');
+    sessionStorage.setItem(LS_AUDIO, '0');
     if (isPatched()) location.reload(); // 恢复视频流
   }
 
